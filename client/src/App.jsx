@@ -72,6 +72,19 @@ export default function App() {
 
   // --- Firebase Auth & Synced Favorites Setup ---
   useEffect(() => {
+    const apiBase = import.meta.env.VITE_API_URL || '';
+    fetch(`${apiBase}/api/health`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! Status: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        setIsOffline(data.isOffline || false);
+      })
+      .catch(() => {
+        setIsOffline(true);
+      });
+
     if (!firebaseConfig) return;
 
     const initAuth = async () => {
